@@ -80,7 +80,7 @@ This route returns a JSON response with a list of all available usernames.
 }
 ```
 
-GET /generate-secret
+### `GET` /generate-secret
 
 This route generates and returns a random secret key.
 
@@ -91,7 +91,7 @@ Response Example:
 }
 ```
 
-POST /get-totp
+### `POST` /get-totp
 
 This route takes a username and returns the TOTP code for that user, along with the time remaining before the code expires.
 
@@ -117,10 +117,11 @@ If an invalid username is provided, the API will return an error response:
 }
 ```
 
-Contributing
+### `Contributing`
 
 Feel free to fork this project and submit pull requests with improvements or bug fixes.
-License
+
+### `License`
 
 This project is open-source and available under the MIT License.
 
