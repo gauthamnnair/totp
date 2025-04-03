@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask TOTP Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .code-display {
+            font-size: 24px;
+            letter-spacing: 5px;
+            text-align: center;
+            margin: 20px 0;
+            font-family: monospace;
+            background-color: #333;
+            color: #fff;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .timer {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .progress {
+            height: 10px;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 1s linear;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TOTP Generator</h1>
+        
+        <div id="setup-form">
+            <label for="username">Select Username:</label>
+            <select id="username-select">
+                <option value="">Select a Username</option>
+                <!-- Dynamic username options will be populated here -->
+            </select>
+            <button id="start-totp">Start TOTP Generator</button>
+        </div>
+        
+        <div id="totp-display" style="display: none;">
+            <div class="code-display" id="totp-code">000000</div>
+            <div class="timer">Expires in: <span id="countdown">30</span>s</div>
+            <div class="progress-bar">
+                <div class="progress" id="progress-bar"></div>
+            </div>
+            <button id="back">Use Different Username</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const usernameSelect = document.getElementById('username-select');
+            const startTotpBtn = document.getElementById('start-totp');
+            const backBtn = document.getElementById('back');
+            const setupForm = document.getElementById('setup-form');
+            const totpDisplay = document.getElementById('totp-display');
+            const totpCodeElement = document.getElementById('totp-code');
+            const countdownElement = document.getElementById('countdown');
+            const progressBar = document.getElementById('progress-bar');
+            
+            let interval;
+            
+            // Fetch usernames from the server and populate the select dropdown
+            fetch('/usernames')
+                .then(response => response.json())
+                .then(data => {
+                    const usernames = data.usernames;
+                    usernames.forEach(username => {
+                        const option = document.createElement('option');
+                        option.value = username;
+                        option.textContent = username;
+                        usernameSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to fetch usernames');
+                });
+            
+            startTotpBtn.addEventListener('click', function() {
+                const username = usernameSelect.value.trim();
+                if (!username) {
+                    alert('Please select a username.');
+                    return;
+                }
+                
+                // Show TOTP display and hide setup form
+                setupForm.style.display = 'none';
+                totpDisplay.style.display = 'block';
+                
+                // Start TOTP generation
+                updateTOTP(username);
+                startTimer();
+            });
+            
+            backBtn.addEventListener('click', function() {
+                // Stop timer
+                clearInterval(interval);
+                
+                // Show setup form and hide TOTP display
+                setupForm.style.display = 'block';
+                totpDisplay.style.display = 'none';
+            });
+            
+            function updateTOTP(username) {
+                fetch('/get-totp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username: username }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+                    
+                    totpCodeElement.textContent = data.code;
+                    countdownElement.textContent = data.timeRemaining;
+                    progressBar.style.width = `${(data.timeRemaining / 30) * 100}%`;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to get TOTP code');
+                });
+            }
+            
+            function startTimer() {
+                clearInterval(interval);
+                
+                // Initial update
+                const username = usernameSelect.value.trim();
+                updateTOTP(username);
+                
+                // Set interval for updates
+                interval = setInterval(() => {
+                    const currentTime = Math.floor(Date.now() / 1000);
+                    const seconds = 30 - (currentTime % 30);
+                    
+                    countdownElement.textContent = seconds;
+                    progressBar.style.width = `${(seconds / 30) * 100}%`;
+                    
+                    // Update code if seconds is 30 or 0 (new period)
+                    if (seconds === 30 || seconds === 0) {
+                        updateTOTP(username);
+                    }
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
