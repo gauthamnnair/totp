@@ -97,7 +97,12 @@ The user interface is built with HTML, CSS, and JavaScript, and it provides a si
    - The app uses `setInterval()` to update the countdown timer and TOTP code every second, refreshing the display when the time reaches zero or 30 seconds.
 
 ### Screenshots
-
+Initial Page
+![image](https://github.com/user-attachments/assets/707b26c1-0c27-4b1a-b1f0-4d59054210cc)
+Drop Down
+![image](https://github.com/user-attachments/assets/38da4174-eaba-4327-b04c-a70ee48e1ea6)
+TOTP Page
+![image](https://github.com/user-attachments/assets/cefc5056-d09e-40ef-8c8f-89e9fd759127)
 
 ## API Endpoints
 
