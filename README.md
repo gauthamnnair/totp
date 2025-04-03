@@ -78,41 +78,44 @@ This route returns a JSON response with a list of all available usernames.
 {
     "usernames": ["user1", "user2"]
 }
+```
 
 GET /generate-secret
 
 This route generates and returns a random secret key.
 
 Response Example:
-
+```json
 {
     "secret": "JBSWY3DPEHPK3PXP"
 }
+```
 
 POST /get-totp
 
 This route takes a username and returns the TOTP code for that user, along with the time remaining before the code expires.
 
 Request Body Example:
-
+```json
 {
     "username": "user1"
 }
-
+```
 Response Example:
-
+```json
 {
     "code": "123456",
     "timeRemaining": 25
 }
-
+```
 Error Handling
 
 If an invalid username is provided, the API will return an error response:
-
+```json
 {
     "error": "Invalid username"
 }
+```
 
 Contributing
 
