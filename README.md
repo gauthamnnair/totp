@@ -46,7 +46,7 @@ This is a simple Flask-based application that generates Time-based One-Time Pass
     pip install -r requirements.txt
     ```
 
-4. Ensure you have a `username_secretkey.py` file with the `user_secrets` dictionary containing the usernames and their associated secret keys:
+4. The `username_secretkey.py` file contains a `user_secrets` dictionary with usernames and their associated secret keys. Change the username and secret key according to your use case:
 
     ```python
     # username_secretkey.py
@@ -54,7 +54,16 @@ This is a simple Flask-based application that generates Time-based One-Time Pass
         "user1": "JBSWY3DPEHPK3PXP",  # Example secret
         "user2": "KZXW6Y3DHJXG4T6F"   # Example secret
     }
+    
     ```
+    - If you need to generate new secret keys, you can use a Python tool like [pyotp](https://pypi.org/project/pyotp/) to generate them. Here's an example of how to generate a new secret key:
+
+    ```python
+    import pyotp
+    print(pyotp.random_base32())  # This will print a new secret key
+    ```
+
+    After generating a new secret key, you can replace the old key in the `user_secrets` dictionary with the new one.
 
 5. Run the Flask app:
 
@@ -72,6 +81,7 @@ The user interface is built with HTML, CSS, and JavaScript, and it provides a si
 
 1. **Username Selection**:
    - The user can select a username from a dropdown list populated dynamically by the app using the `/usernames` API endpoint.
+![image](https://github.com/user-attachments/assets/38da4174-eaba-4327-b04c-a70ee48e1ea6)
    
 2. **TOTP Display**:
    - After selecting a username, the user clicks the **"Start TOTP Generator"** button to begin generating TOTP codes.
@@ -83,6 +93,7 @@ The user interface is built with HTML, CSS, and JavaScript, and it provides a si
    - The timer is initialized when the user selects a username and clicks **Start TOTP Generator**.
    - The TOTP code is updated every 30 seconds as a new code is generated for the user.
    - The progress bar fills according to the time remaining.
+![image](https://github.com/user-attachments/assets/cefc5056-d09e-40ef-8c8f-89e9fd759127)
 
 ### Key JavaScript Functions:
 
@@ -95,14 +106,6 @@ The user interface is built with HTML, CSS, and JavaScript, and it provides a si
 
 - **Timer Update**:
    - The app uses `setInterval()` to update the countdown timer and TOTP code every second, refreshing the display when the time reaches zero or 30 seconds.
-
-### Screenshots
-Initial Page
-![image](https://github.com/user-attachments/assets/707b26c1-0c27-4b1a-b1f0-4d59054210cc)
-Drop Down
-![image](https://github.com/user-attachments/assets/38da4174-eaba-4327-b04c-a70ee48e1ea6)
-TOTP Page
-![image](https://github.com/user-attachments/assets/cefc5056-d09e-40ef-8c8f-89e9fd759127)
 
 ## API Endpoints
 
