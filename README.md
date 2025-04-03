@@ -81,6 +81,7 @@ The user interface is built with HTML, CSS, and JavaScript, and it provides a si
 
 1. **Username Selection**:
    - The user can select a username from a dropdown list populated dynamically by the app using the `/usernames` API endpoint.
+
 ![image](https://github.com/user-attachments/assets/38da4174-eaba-4327-b04c-a70ee48e1ea6)
    
 2. **TOTP Display**:
@@ -93,6 +94,7 @@ The user interface is built with HTML, CSS, and JavaScript, and it provides a si
    - The timer is initialized when the user selects a username and clicks **Start TOTP Generator**.
    - The TOTP code is updated every 30 seconds as a new code is generated for the user.
    - The progress bar fills according to the time remaining.
+
 ![image](https://github.com/user-attachments/assets/cefc5056-d09e-40ef-8c8f-89e9fd759127)
 
 ### Key JavaScript Functions:
