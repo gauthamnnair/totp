@@ -27,8 +27,8 @@ This is a simple Flask-based application that generates Time-based One-Time Pass
 1. Clone this repository:
 
     ```bash
-    git clone https://github.com/yourusername/totp-flask-app.git
-    cd totp-flask-app
+    git clone https://github.com/gauthamnnair/totp.git
+    cd totp
     ```
 
 2. Create a virtual environment (optional but recommended):
@@ -78,3 +78,49 @@ This route returns a JSON response with a list of all available usernames.
 {
     "usernames": ["user1", "user2"]
 }
+
+GET /generate-secret
+
+This route generates and returns a random secret key.
+
+Response Example:
+
+{
+    "secret": "JBSWY3DPEHPK3PXP"
+}
+
+POST /get-totp
+
+This route takes a username and returns the TOTP code for that user, along with the time remaining before the code expires.
+
+Request Body Example:
+
+{
+    "username": "user1"
+}
+
+Response Example:
+
+{
+    "code": "123456",
+    "timeRemaining": 25
+}
+
+Error Handling
+
+If an invalid username is provided, the API will return an error response:
+
+{
+    "error": "Invalid username"
+}
+
+Contributing
+
+Feel free to fork this project and submit pull requests with improvements or bug fixes.
+License
+
+This project is open-source and available under the MIT License.
+
+
+This `README.md` includes an overview of the project, setup instructions, API endpoints, and error handling details, which should help any user get started with your project quickly.
+
